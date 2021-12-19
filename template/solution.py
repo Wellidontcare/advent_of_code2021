@@ -24,9 +24,9 @@ if __name__ == "__main__":
 
     data = sample_data if eval_sample else input_data
     print("-----------------------")
-    print("Results for *"):
+    print("Results for *:")
     solve_1(data)
     print("-----------------------")
-    print("Results for **"):
+    print("Results for **:")
     solve_2(data)
     print("-----------------------")
