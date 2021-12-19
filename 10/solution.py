@@ -19,11 +19,6 @@ def read_lines(path):
         return [l.strip() for l in file]
 
 
-def read_comma_separated(path, t):
-    with open(path) as file:
-        return [t(n) for n in file.read().strip().split(",")]
-
-
 def build_completion(line):
     chars = []
     for char in line:
@@ -43,7 +38,7 @@ def calculate_completion_score(completion):
     return score
 
 
-def check(line):
+def corruption_check(line):
     chars = []
     for char in line:
         if char not in open_char:
@@ -62,13 +57,13 @@ def solve_1():
     sample = read_lines("input.txt")
     s = 0
     for line in sample:
-        s += check(line)
+        s += corruption_check(line)
     print(s)
 
 
 def solve_2():
     sample = read_lines("input.txt")
-    incomplete_lines = [l for l in sample if check(l) == 0]
+    incomplete_lines = [l for l in sample if corruption_check(l) == 0]
     scores = [
         calculate_completion_score(build_completion(line)) for line in incomplete_lines
     ]
