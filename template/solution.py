@@ -1,16 +1,32 @@
 import numpy as np
 import cv2
-import scipy.optimize as opt
-import scipy.stats as stat
-import scipy.linalg as lin
-import scipy.sparse as sparse
-import scipy.special as spec
+import matplotlib.pyplot as plt
 
 
-def read_comma_separated(path, t):
-    with open(path) as file:
-        return [t(n) for n in file.read().strip().split(",")]
+def read_file(path):
+    with open(path) as f:
+        return f.read()
+
+
+def solve_1(data):
+    pass
+
+
+def solve_2(data):
+    pass
 
 
 if __name__ == "__main__":
-    sample = read_comma_separated("sample.txt", int)
+    eval_sample = True
+
+    sample_data = read_file("sample.txt")
+    input_data = read_file("input.txt")
+
+    data = sample_data if eval_sample else input_data
+    print("-----------------------")
+    print("Results for *"):
+    solve_1(data)
+    print("-----------------------")
+    print("Results for **"):
+    solve_2(data)
+    print("-----------------------")
