@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import time
+import skimage.color as sk
 
 
 def read_file(path):
@@ -93,7 +94,7 @@ def data_to_matrix(data):
 def solve_1(data):
     data = data_to_matrix(data)
     octo_grid = build_octo_grid(data)
-    for i in range(1000):
+    for i in range(100):
         # print(octo_grid)
         step(octo_grid)
         # time.sleep(0.1)
@@ -104,15 +105,72 @@ def solve_1(data):
 def solve_2(data):
     data = data_to_matrix(data)
     octo_grid = build_octo_grid(data)
-    for i in range(100000):
+    count = 0
+    while True:
+        count += 1
         step(octo_grid)
         if np.all(octo_grid == 0):
             break
-    print(i + 1)
+    print(count)
+
+
+def generate_grid_vis(octo_grid):
+    mat = np.zeros((1000, 1000, 3))
+    h, w = octo_grid.shape
+    for y in range(h):
+        for x in range(w):
+            lvl = octo_grid[y, x].energy_level
+            lightness = int((lvl / 9) * 255) if lvl > 0 else 255
+            r = lvl * 5
+            mat = cv2.circle(
+                mat,
+                (x * 90 + 90, y * 90 + 90),
+                r,
+                (200, 255, lightness),
+                thickness=-1,
+            )
+            mat = cv2.circle(
+                mat,
+                (x * 90 + 80, y * 90 + 80),
+                5,
+                (0, 0, 0),
+                thickness=-1,
+            )
+            mat = cv2.circle(
+                mat,
+                (x * 90 + 100, y * 90 + 80),
+                5,
+                (0, 0, 0),
+                thickness=-1,
+            )
+            mat = cv2.circle(
+                mat,
+                (x * 90 + 90, y * 90 + 110),
+                7,
+                (0, 0, 0),
+                thickness=-1,
+            )
+    mat = cv2.cvtColor(mat.astype("uint8"), cv2.COLOR_HSV2BGR)
+    return mat
+
+
+def vis_octopi(data):
+    data = data_to_matrix(data)
+    octo_grid = build_octo_grid(data)
+    max_cycle_after_sync = 25
+    while True and max_cycle_after_sync > 0:
+        cv2.imshow("Visualization", generate_grid_vis(octo_grid))
+        step(octo_grid)
+        key = cv2.waitKey(15)
+        if np.all(octo_grid == 0):
+            max_cycle_after_sync -= 1
+        if key == ord("q"):
+            break
+    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
-    eval_sample = False
+    eval_sample = True
 
     sample_data = read_file("sample.txt")
     input_data = read_file("input.txt")
@@ -125,3 +183,4 @@ if __name__ == "__main__":
     print("Results for **:")
     solve_2(data)
     print("-----------------------")
+    vis_octopi(data)
