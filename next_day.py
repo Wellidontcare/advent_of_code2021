@@ -9,6 +9,7 @@ if __name__ == "__main__":
     days = os.listdir()
     days = [d for d in days if d.isnumeric()]
     days = [int(d) for d in days]
+    days.append(0)
     next_day = max(days) + 1
     session_path = Path("session.txt")
     if session_path.exists():
@@ -19,7 +20,7 @@ if __name__ == "__main__":
             "Please provide your advent of code session cookie in a session.txt in the root directory!"
         )
         exit()
-    shutil.copytree("template", Path(str(next_day)))
+    shutil.copytree("template", Path(f"{next_day:02}"))
 
     session_path = Path("session.txt")
     if session_path.exists():

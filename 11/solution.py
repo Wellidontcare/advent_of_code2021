@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import time
-from tkinter import Tk, Text, Label
 import clipboard
 
 
