@@ -37,6 +37,16 @@ def solve_1():
     hm = read_heightmap("input.txt")
     find_minima(hm)
 
+def solve_2():
+    hm = read_heightmap("input.txt")
+    hm[hm != 9] = 1
+    hm[hm == 9] = 0
+    _, labels = cv2.connectedComponents(hm.astype("uint8"),connectivity=4, ltype=cv2.CV_16U)
+    areas = [np.sum(labels == l) for l in set(labels.flat)]
+    print(np.prod(sorted(areas)[-5:-2]))
+
+
 
 if __name__ == "__main__":
     solve_1()
+    solve_2()
