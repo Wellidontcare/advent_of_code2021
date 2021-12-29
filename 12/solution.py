@@ -12,22 +12,21 @@ def read_file(path):
 
 
 class node:
-    root = False
-    neighbours = None
-    is_small = False
-    rep = ""
-    visitable = True
-
-    def is_single_visit(self):
+    def single_visit_node(self):
         return self.rep.islower()
 
-    def __init__(self, neighbours, rep, root=False):
+    def __init__(self, neighbours, rep):
         self.neighbours = neighbours
         self.rep = rep
-        self.root = root
 
     def __repr__(self):
         return f"{self.rep} Neighbours: {len(self.neighbours)}"
+
+    def __add__(self, string: str):
+        return f"{self.rep}{string}"
+
+    def __hash__(self):
+        return self.rep.__hash__()
 
 
 def build_graph_from_string(string: str):
@@ -36,13 +35,12 @@ def build_graph_from_string(string: str):
         nodes = n.strip().split("-")
         for no in nodes:
             node_map[no] = node([], no)
-    node_map["start"].root = True
     for n in string.strip().split("\n"):
         nodes = n.strip().split("-")
         a, b = nodes
         node_map[a].neighbours.append(node_map[b])
         node_map[b].neighbours.append(node_map[a])
-    return node_map["start"]
+    return node_map
 
 
 def vis_graph(root_node):
@@ -58,36 +56,67 @@ def vis_graph(root_node):
             add_edge(n, graph, edges)
 
     add_edge(root_node, g, [])
-    g.render("test.pdf", view=True)
+    g.render("graph.pdf", view=True)
 
 
-
-def traverse(n: node, visited: Set[node], path: str = ""):
-    global count
-    if n.is_single_visit():
-        visited.add(n)
+def traverse(n: node, visited: Set[node], path=""):
     if n.rep == "end":
-        count += 1
-        #print((path + "-end")[1:])
-        return
-    for neighbour in n.neighbours:
-        if neighbour not in visited:
-            visited_c = visited.copy()
-            if neighbour.is_single_visit():
-                visited_c.add(neighbour)
-            traverse(neighbour, visited_c, path + "-" + n.rep)
+        path = path + "start"
+        yield path
+    else:
+        for neighbour in n.neighbours:
+            if neighbour.single_visit_node():
+                if neighbour not in visited:
+                    yield from traverse(
+                        neighbour, visited | {neighbour}, neighbour + "-" + path
+                    )
+            else:
+                yield from traverse(neighbour, visited, neighbour + "-" + path)
+
+
+def double_visit_traverse(
+    n: node, visited: Set[node], double_visit_exhausted: bool, path=""
+):
+    if n.rep == "end":
+        path = path + "start"
+        yield path
+    else:
+        for neighbour in n.neighbours:
+            if neighbour.single_visit_node():
+                if neighbour not in visited:
+                    yield from double_visit_traverse(
+                        neighbour,
+                        visited | {neighbour},
+                        double_visit_exhausted,
+                        neighbour + "-" + path,
+                    )
+                elif not double_visit_exhausted and neighbour.rep not in {"start", "end"}:
+                    yield from double_visit_traverse(
+                        neighbour, visited, True, neighbour + "-" + path
+                    )
+            else:
+                yield from double_visit_traverse(
+                    neighbour, visited, double_visit_exhausted, neighbour + "-" + path
+                )
 
 
 def solve_1(data) -> int:
-    node = build_graph_from_string(data)
-    # vis_graph(node)
-    visited = set()
-    traverse(node, visited)
-    return count
+    paths = set()
+    graph = build_graph_from_string(data)
+    top_node = graph["start"]
+    visited = {top_node}
+    return len(list(traverse(top_node, visited)))
 
 
 def solve_2(data) -> int:
-    return 25
+    paths = set()
+    graph = build_graph_from_string(data)
+    top_node = graph["start"]
+    visited = {top_node}
+    vis_graph(top_node)
+    return len(
+        list(double_visit_traverse(top_node, visited, double_visit_exhausted=False))
+    )
 
 
 count = 0
