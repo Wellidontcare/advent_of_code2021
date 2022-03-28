@@ -14,8 +14,6 @@ if __name__ == "__main__":
             position += directions[direction] * float(ammount)
             if "forward" in direction:
                 position[1] += position[2] * float(ammount)
-            print(instruction)
-            print(f"H, V, A {position}")
 
     horizontal, vertical, aim = position
     print(f"{vertical=}, {horizontal=}")
