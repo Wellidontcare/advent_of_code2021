@@ -21,6 +21,7 @@ def get_vertical_lines(lines):
 
 
 if __name__ == "__main__":
+    1/0
     start = []
     end = []
     with open("input.txt", "r") as file:

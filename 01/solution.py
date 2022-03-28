@@ -11,12 +11,12 @@ def count_increase(data):
     """
     return np.count_nonzero(np.diff(data) > 0)
 
-
 def count_increase_sliding_mean(data):
-    data_conv = np.convolve(data, [1, 1, 1], mode="valid")
+    data_conv = np.correlate(data, [1, 1, 1], mode="valid")
     # plt.plot(data_conv)
     # plt.plot(np.diff(data))
     # plt.plot(500 * (np.diff(data) > 0))
+    print(data_conv)
     return count_increase(data_conv)
 
 
