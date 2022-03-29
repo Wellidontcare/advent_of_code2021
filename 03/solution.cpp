@@ -59,9 +59,7 @@ auto binary_vector_to_number(std::vector<T> bin_vec, int bit_width) {
 }
 
 auto main() -> int {
-  auto read_res = read_binary_strings_to_vector<int>("input.txt");
-  auto bit_width = read_res.bit_width;
-  auto values = read_res.vec;
+  auto[bit_width, values] = read_binary_strings_to_vector<int>("input.txt");
   auto most_common_bits = all_most_common_bits(values, bit_width);
   auto gamma = binary_vector_to_number(most_common_bits, bit_width);
   auto mask = (~0u >> ((8 * sizeof(int)) -
