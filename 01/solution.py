@@ -35,6 +35,7 @@ if __name__ == "__main__":
     input_data = np.loadtxt("input.txt")
 
     data = sample_data if eval_sample else input_data
+    
 
     print("----------------------------")
     print("Result for *:")
