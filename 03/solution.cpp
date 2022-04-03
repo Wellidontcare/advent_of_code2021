@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include <list>
-#include <bit>
 
 template <typename Vector> void print_vector(const Vector &vec) {
   using T = typename Vector::value_type;
@@ -26,7 +25,7 @@ template <typename T> struct read_result {
 
 template <typename T>
 auto read_binary_strings_to_vector(const char *file_path) -> read_result<T> {
-  auto file = std::fstream(file_path);
+  auto file = std::ifstream(file_path);
   auto vec = std::vector<T>{};
   vec.reserve(2000);
   auto bit_width = 0;
@@ -91,7 +90,7 @@ auto device_rating(const std::vector<T> &vec, unsigned bit_width,
 }
 
 template <typename T>
-auto binary_vector_to_number(std::vector<T> bin_vec, int bit_width) {
+auto binary_vector_to_number(const std::vector<T>& bin_vec, int bit_width) {
   auto bin_str = std::string(bin_vec.size(), '0');
   std::transform(bin_vec.begin(), bin_vec.end(), bin_str.begin(),
                  [](auto &val) { return val ? '1' : '0'; });
@@ -103,7 +102,7 @@ template <typename T> std::string to_binary(T number, unsigned bit_width) {
   std::string binary(bit_width, '0');
   auto cur_col = 0;
   std::transform(binary.begin(), binary.end(), binary.begin(),
-                 [&](auto &c) { return bit_at(c++, cur_col, bit_width); });
+                 [&](auto &c) { return bit_at(c, cur_col++, bit_width); });
   return binary;
 }
 

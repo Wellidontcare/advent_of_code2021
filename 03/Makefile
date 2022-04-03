@@ -1,4 +1,4 @@
 build: solution.cpp
-	g++-11 solution.cpp -o solution --std=c++20 -O3
+	g++ solution.cpp -o solution --std=c++17 -O3
 run: build
 	./solution
