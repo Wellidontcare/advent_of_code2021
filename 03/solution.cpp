@@ -16,7 +16,7 @@ template <typename Vector> void print_vector(const Vector &vec) {
 
 template <typename T>
 constexpr T bit_at(T value, unsigned index, unsigned bit_width) {
-  return (value & (1 << (bit_width - index - 1))) >> (bit_width - index - 1);
+  return static_cast<T>(static_cast<bool>(value & (1 << (bit_width - index - 1))));
 }
 
 template <typename T> struct read_result {
