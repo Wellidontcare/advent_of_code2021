@@ -20,4 +20,4 @@ if __name__ == "__main__":
         if finish:
             break
 
-    print(np.sum(winning_board[np.imag(winning_board) == 0]) * winning_number)
+    print(f"Solution 1: {(np.sum(winning_board[np.imag(winning_board) == 0]) * winning_number).real}")
